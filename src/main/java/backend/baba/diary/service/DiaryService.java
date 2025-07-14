@@ -31,10 +31,19 @@ public class DiaryService {
     }
 
     //문화생활 기록 전체 조회 - 내가 작성한
-    public List<DiaryResponse> getAllDiaries(Long id){
+    @Transactional
+    public List<DiaryResponse> getAllMyDiaries(Long id){
         Member member=memberRepository.findById(id).orElse(null);
         List<Diary> diaries=diaryRepository.findAll();
         return diaries.stream().map(DiaryResponse::new).toList();
+    }
+
+    //문화생활기록 - 단일조회
+    @Transactional
+    public DiaryResponse getDiaryById(Long diaryId, Long memberId){
+        Diary diary=diaryRepository.findByIdAndMemberId(diaryId,memberId)
+                .orElseThrow(()->new IllegalArgumentException("다이어리가 존재하지 않습니다."));
+        return new DiaryResponse(diary);
     }
 
 }
