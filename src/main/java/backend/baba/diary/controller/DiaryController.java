@@ -20,17 +20,24 @@ import java.util.List;
 public class DiaryController {
 
     private  final DiaryService diaryService;
-    @PostMapping("/{member_id}")
+    @PostMapping
     @Operation(summary = "문화생활 기록 추가", description = "사용자가 문화생활을 기록합니다.")
-    public ResponseEntity<DiaryResponse> createDiary(@PathVariable("member_id") Long id, @Valid @RequestBody DiaryCreateRequest request){
+    public ResponseEntity<DiaryResponse> createDiary(@RequestParam Long id, @Valid @RequestBody DiaryCreateRequest request){
         DiaryResponse response=diaryService.createDiary(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/{member_id}")
+    @GetMapping("/me")
     @Operation(summary = "나의 문화생활 기록 전체 조회", description = "사용자가 작성한 문화생활 기록을 전체 조회합니다.")
-    public ResponseEntity<List<DiaryResponse>> getAllMyDiaries(@PathVariable ("member_id") Long id){
-        List<DiaryResponse> responses=diaryService.getAllDiaries(id);
+    public ResponseEntity<List<DiaryResponse>> getAllMyDiaries(@RequestParam Long id){
+        List<DiaryResponse> responses=diaryService.getAllMyDiaries(id);
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/{diary_id}")
+    public ResponseEntity<DiaryResponse> getDiaryById(@PathVariable("diary_id") Long diaryId, @RequestParam("memberId") Long memberId){
+        DiaryResponse response=diaryService.getDiaryById(diaryId, memberId);
+        return ResponseEntity.ok(response);
+    }
+
 }
