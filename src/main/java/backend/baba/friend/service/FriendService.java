@@ -56,4 +56,17 @@ public class FriendService {
                 .map(friend -> friend.getFromUser().getUsername())  // fromUser가 나를 팔로우한 사람
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void unfollow(String fromUsername, String toUsername) {
+        Member fromUser = memberRepository.findByUsername(fromUsername)
+                .orElseThrow(() -> new IllegalArgumentException("보내는 유저가 존재하지 않습니다."));
+        Member toUser = memberRepository.findByUsername(toUsername)
+                .orElseThrow(() -> new IllegalArgumentException("받는 유저가 존재하지 않습니다."));
+
+        Friend friendship = friendRepository.findByFromUserAndToUser(fromUser, toUser)
+                .orElseThrow(() -> new IllegalArgumentException("팔로우 관계가 존재하지 않습니다."));
+
+        friendRepository.delete(friendship);
+    }
 }
