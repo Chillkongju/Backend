@@ -29,4 +29,9 @@ public class FeedController {
         List<DiaryResponseDto> feed = feedService.getFeedByFriend(username, category);
         return ResponseEntity.ok(feed);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DiaryResponseDto>> getAllFeed(@RequestParam String username) {
+        return ResponseEntity.ok(feedService.getAllFeed(username));
+    }
 }
