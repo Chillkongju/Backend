@@ -18,7 +18,7 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
-    // 팔로우 요청 (언팔 존재 시 다시 팔로우 가능)
+    // 팔로우 요청(언팔 존재 시 다시 팔로우 가능)
     public void sendFriendRequest(String fromUsername, String toUsername) {
         Member fromMember = memberRepository.findByUsername(fromUsername)
                 .orElseThrow(() -> new IllegalArgumentException("보내는 유저가 존재하지 않습니다."));
@@ -39,7 +39,7 @@ public class FriendService {
         friendRepository.save(friend);
     }
 
-    // 언팔로우
+    // 언팔
     @Transactional
     public void unfollow(String fromUsername, String toUsername) {
         Member fromMember = memberRepository.findByUsername(fromUsername)
