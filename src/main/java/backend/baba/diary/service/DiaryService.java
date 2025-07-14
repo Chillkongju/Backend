@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
@@ -26,6 +28,13 @@ public class DiaryService {
         Diary diary=Diary.create(member,request.getTitle(),request.getContent(), request.getCategory(), request.getRating(), request.getWatchedAt());
         diaryRepository.save(diary);
         return new DiaryResponse(diary);
+    }
+
+    //문화생활 기록 전체 조회 - 내가 작성한
+    public List<DiaryResponse> getAllDiaries(Long id){
+        Member member=memberRepository.findById(id).orElse(null);
+        List<Diary> diaries=diaryRepository.findAll();
+        return diaries.stream().map(DiaryResponse::new).toList();
     }
 
 }
