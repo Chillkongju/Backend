@@ -21,10 +21,10 @@ public class Friend {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member fromUser;
+    private Member fromMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member toUser;
+    private Member toMember;
 
     @Enumerated(EnumType.STRING)
     private FriendStatus status;
