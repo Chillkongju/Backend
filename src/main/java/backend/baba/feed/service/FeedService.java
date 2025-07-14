@@ -37,4 +37,20 @@ public class FeedService {
                 .map(DiaryResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public List<DiaryResponseDto> getAllFeed(String username) {
+        Member me = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+
+        List<Friend> following = friendRepository.findByFromMemberAndStatus(me, Friend.FriendStatus.ACCEPTED);
+        List<Member> followingMembers = following.stream()
+                .map(Friend::getToMember)
+                .collect(Collectors.toList());
+
+        List<Diary> diaries = diaryRepository.findByMemberInOrderByCreatedDateDesc(followingMembers);
+
+        return diaries.stream()
+                .map(DiaryResponseDto::fromEntity)
+                .collect(Collectors.toList());
+    }
 }
