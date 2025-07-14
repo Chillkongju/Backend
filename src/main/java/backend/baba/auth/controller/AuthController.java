@@ -1,5 +1,7 @@
 package backend.baba.auth.controller;
 
+import backend.baba.auth.dto.LoginRequestDto;
+import backend.baba.auth.service.AuthService;
 import backend.baba.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final MemberService memberService;
+    private final AuthService authService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestParam String username,
@@ -30,4 +33,15 @@ public class AuthController {
         boolean isDuplicate = memberService.isUsernameDuplicate(username);
         return ResponseEntity.ok(isDuplicate);
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto requestDto) {
+        try {
+            authService.login(requestDto);
+            return ResponseEntity.ok("로그인 성공");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }
