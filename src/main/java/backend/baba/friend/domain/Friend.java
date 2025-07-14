@@ -6,18 +6,26 @@ import lombok.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Friend {
+
+    public enum FriendStatus {
+        ACCEPTED
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member fromUser;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member toUser;
+
+    @Enumerated(EnumType.STRING)
+    private FriendStatus status;
 }

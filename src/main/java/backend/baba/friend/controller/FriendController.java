@@ -15,23 +15,22 @@ public class FriendController {
 
     private final FriendService friendService;
 
-    // 친구 요청 시 바로 팔로우로 처리
+    // 팔로우 요청 API
     @PostMapping("/request")
-    public ResponseEntity<String> sendFriendRequest(
-            @RequestParam String fromUsername,
-            @RequestParam String toUsername
-    ) {
-        try {
-            friendService.sendFriendRequest(fromUsername, toUsername);
-            return ResponseEntity.ok("팔로우 완료");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body("에러: " + e.getMessage());
-        }
+    public ResponseEntity<String> sendFriendRequest(@RequestParam String fromUsername, @RequestParam String toUsername) {
+        friendService.sendFriendRequest(fromUsername, toUsername);
+        return ResponseEntity.ok("팔로우 완료");
     }
 
-    // 팔로우 목록 조회
-    @GetMapping("/list")
-    public ResponseEntity<?> getFriendList(@RequestParam String username) {
-        return ResponseEntity.ok(friendService.getFriendList(username));
+    // 내가 팔로우한 유저 목록 조회 API
+    @GetMapping("/following")
+    public ResponseEntity<List<String>> getFollowing(@RequestParam String username) {
+        return ResponseEntity.ok(friendService.getFollowingList(username));
+    }
+
+    // 나를 팔로우한 유저 목록 조회 API
+    @GetMapping("/follower")
+    public ResponseEntity<List<String>> getFollower(@RequestParam String username) {
+        return ResponseEntity.ok(friendService.getFollowerList(username));
     }
 }
