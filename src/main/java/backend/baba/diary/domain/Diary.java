@@ -64,5 +64,9 @@ public class Diary {
         return this.category.getLabel();
     }
 
+    public void setLoveCount(int loveCount) {
+        this.loveCount = loveCount;
+    }
+
 
 }
