@@ -18,42 +18,60 @@ public class FriendService {
     private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
+    // 팔로우 요청 (언팔 존재 시 다시 팔로우 가능)
     public void sendFriendRequest(String fromUsername, String toUsername) {
-        Member fromUser = memberRepository.findByUsername(fromUsername)
+        Member fromMember = memberRepository.findByUsername(fromUsername)
                 .orElseThrow(() -> new IllegalArgumentException("보내는 유저가 존재하지 않습니다."));
-        Member toUser = memberRepository.findByUsername(toUsername)
+        Member toMember = memberRepository.findByUsername(toUsername)
                 .orElseThrow(() -> new IllegalArgumentException("받는 유저가 존재하지 않습니다."));
 
-        if (friendRepository.findByFromUserAndToUser(fromUser, toUser).isPresent()) {
-            throw new IllegalStateException("이미 팔로우한 유저입니다.");
+        // 이미 팔로우 중인지 확인
+        if (friendRepository.findByFromMemberAndToMember(fromMember, toMember).isPresent()) {
+            throw new IllegalStateException("이미 팔로우 중입니다.");
         }
 
-        Friend friendRequest = Friend.builder()
-                .fromUser(fromUser)
-                .toUser(toUser)
-                .status(Friend.FriendStatus.ACCEPTED)  // 수정됨: 수락 없이 바로 팔로우 되도록
+        Friend friend = Friend.builder()
+                .fromMember(fromMember)
+                .toMember(toMember)
+                .status(Friend.FriendStatus.ACCEPTED)
                 .build();
 
-        friendRepository.save(friendRequest);
+        friendRepository.save(friend);
     }
 
-    // 내가 팔로우한 유저 목록 (내가 fromUser인 경우)
+    // 언팔로우
+    @Transactional
+    public void unfollow(String fromUsername, String toUsername) {
+        Member fromMember = memberRepository.findByUsername(fromUsername)
+                .orElseThrow(() -> new IllegalArgumentException("보내는 유저가 존재하지 않습니다."));
+        Member toMember = memberRepository.findByUsername(toUsername)
+                .orElseThrow(() -> new IllegalArgumentException("받는 유저가 존재하지 않습니다."));
+
+        Friend friend = friendRepository.findByFromMemberAndToMember(fromMember, toMember)
+                .orElseThrow(() -> new IllegalArgumentException("팔로우 관계가 존재하지 않습니다."));
+
+        friendRepository.delete(friend);
+    }
+
+    // 내가 팔로우한 유저 목록 조회 (팔로잉)
     public List<String> getFollowingList(String username) {
-        Member user = memberRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
-        return friendRepository.findByFromUserAndStatus(user, Friend.FriendStatus.ACCEPTED).stream()
-                .map(friend -> friend.getToUser().getUsername())  // toUser가 내가 팔로우한 사람
+        return friendRepository.findByFromMemberAndStatus(member, Friend.FriendStatus.ACCEPTED)
+                .stream()
+                .map(friend -> friend.getToMember().getUsername())
                 .collect(Collectors.toList());
     }
 
-    // 나를 팔로우한 유저 목록 (내가 toUser인 경우)
+    // 나를 팔로우한 유저 목록 조회 (팔로워)
     public List<String> getFollowerList(String username) {
-        Member user = memberRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
-        return friendRepository.findByToUserAndStatus(user, Friend.FriendStatus.ACCEPTED).stream()
-                .map(friend -> friend.getFromUser().getUsername())  // fromUser가 나를 팔로우한 사람
+        return friendRepository.findByToMemberAndStatus(member, Friend.FriendStatus.ACCEPTED)
+                .stream()
+                .map(friend -> friend.getFromMember().getUsername())
                 .collect(Collectors.toList());
     }
 
