@@ -28,6 +28,12 @@ public class FriendController {
         return ResponseEntity.ok(friendService.getFollowingList(username));
     }
 
+    @DeleteMapping("/unfollow")
+    public ResponseEntity<String> unfollow(@RequestParam String fromUsername, @RequestParam String toUsername) {
+        friendService.unfollow(fromUsername, toUsername);
+        return ResponseEntity.ok("언팔로우 완료");
+    }
+
     // 나를 팔로우한 유저 목록 조회 API
     @GetMapping("/follower")
     public ResponseEntity<List<String>> getFollower(@RequestParam String username) {
