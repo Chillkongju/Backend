@@ -46,4 +46,10 @@ public class DiaryService {
         return new DiaryResponse(diary);
     }
 
+    public void deleteDiary(Long diaryId, Long memberId){
+        Diary diary=diaryRepository.findByIdAndMemberId(diaryId,memberId)
+                .orElseThrow(()-> new IllegalArgumentException("기록이 존재하지 않습니다."));
+        diaryRepository.delete(diary);
+    }
+
 }
