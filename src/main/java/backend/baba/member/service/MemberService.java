@@ -1,6 +1,7 @@
 package backend.baba.member.service;
 
 import backend.baba.member.domain.Member;
+import backend.baba.member.dto.MemberInfoResponseDto;
 import backend.baba.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,5 +30,11 @@ public class MemberService {
 
     public boolean isUsernameDuplicate(String username) {
         return memberRepository.findByUsername(username).isPresent();
+    }
+
+    public MemberInfoResponseDto getMyInfo(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return new MemberInfoResponseDto(member);
     }
 }
