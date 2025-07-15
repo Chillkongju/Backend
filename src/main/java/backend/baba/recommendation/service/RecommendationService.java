@@ -187,4 +187,22 @@ public class RecommendationService {
                 .toList();
     }
 
+    public List<CategoryRecommendationResponse> getMonthlyRecommendations(Long memberId) {
+        List<Recommendation> recommendations = recommendationRepository.findAllByMemberIdAndType(memberId, "MONTHLY");
+
+        return recommendations.stream()
+                .collect(Collectors.groupingBy(Recommendation::getCategory))
+                .entrySet()
+                .stream()
+                .map(entry -> CategoryRecommendationResponse.builder()
+                        .category(entry.getKey().getLabel())
+                        .recommendations(
+                                entry.getValue().stream()
+                                        .map(RecommendationResponse::from)
+                                        .toList()
+                        )
+                        .build())
+                .toList();
+    }
+
 }
