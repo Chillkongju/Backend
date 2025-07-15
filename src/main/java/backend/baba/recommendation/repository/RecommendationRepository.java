@@ -1,4 +1,7 @@
 package backend.baba.recommendation.repository;
 
-public class RecommendationRepository {
+import backend.baba.recommendation.domain.Recommendation;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RecommendationRepository extends JpaRepository<Recommendation,Long> {
 }
