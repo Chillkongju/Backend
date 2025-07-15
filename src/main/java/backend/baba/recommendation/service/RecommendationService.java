@@ -63,6 +63,7 @@ public class RecommendationService {
                             .member(diary.getMember())
                             .category(diary.getCategory())
                             .title(title)
+                            .diary(diary)
                             .releaseDate(releaseDate)
                             .genre(genre)
                             .summary(summary)
@@ -179,6 +180,11 @@ public class RecommendationService {
                 .toList();
     }
 
-
+    public List<RecommendationResponse> getRecommendationsByDiaryId(Long diaryId) {
+        return recommendationRepository.findAllByDiaryId(diaryId)
+                .stream()
+                .map(RecommendationResponse::from)
+                .toList();
+    }
 
 }

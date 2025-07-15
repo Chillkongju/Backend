@@ -1,6 +1,7 @@
 package backend.baba.recommendation.domain;
 
 import backend.baba.diary.domain.Category;
+import backend.baba.diary.domain.Diary;
 import backend.baba.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,4 +36,7 @@ public class Recommendation {
     private String summary;
 
     private String type; // "SINGLE" or "MONTHLY"
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Diary diary;
 }
