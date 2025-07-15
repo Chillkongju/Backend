@@ -22,4 +22,13 @@ public enum Category {
     public String getLabel(){
         return label;
     }
+
+    public static Category fromLabel(String label) {
+        for (Category category : Category.values()) {
+            if (category.getLabel().equals(label)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("존재하지 않는 카테고리 라벨입니다: " + label);
+    }
 }
