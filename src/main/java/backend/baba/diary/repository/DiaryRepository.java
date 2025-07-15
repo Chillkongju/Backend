@@ -1,4 +1,5 @@
 package backend.baba.diary.repository;
+import java.time.LocalDate;
 import java.util.List;
 import backend.baba.diary.domain.Diary;
 import backend.baba.member.domain.Member;
@@ -12,4 +13,6 @@ public interface DiaryRepository extends JpaRepository<Diary,Long> {
 
     List<Diary> findByMemberIn(List<Member> members);
     List<Diary> findByMemberInOrderByCreatedDateDesc(List<Member> members);
+    List<Diary> findByMemberIdAndWatchedAtBetween(Long memberId, LocalDate startDate, LocalDate endDate);
+
 }

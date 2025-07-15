@@ -2,6 +2,7 @@ package backend.baba.recommendation.controller;
 
 import backend.baba.diary.domain.Diary;
 import backend.baba.diary.repository.DiaryRepository;
+import backend.baba.recommendation.dto.CategoryRecommendationResponse;
 import backend.baba.recommendation.dto.RecommendationResponse;
 import backend.baba.recommendation.service.RecommendationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,4 +32,23 @@ public class RecommendationController {
         List<RecommendationResponse> recommendations = recommendationService.recommendBySingleDiary(diary);
         return ResponseEntity.ok(recommendations);
     }
+
+    @PostMapping("/monthly/{memberId}")
+    @Operation(summary = "이번 달 기록 기반 다음 달 콘텐츠 추천", description = "사용자가 이번 달 작성한 문화생활 기록을 기반으로, 다음 달 추천 콘텐츠를 카테고리별로 제공합니다.")
+    public ResponseEntity<List<CategoryRecommendationResponse>> recommendNextMonth(
+            @PathVariable Long memberId
+    ) {
+        LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
+        LocalDate endOfMonth = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
+
+        List<Diary> diaries = diaryRepository.findByMemberIdAndWatchedAtBetween(memberId, startOfMonth, endOfMonth);
+
+        if (diaries.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<CategoryRecommendationResponse> response = recommendationService.recommendByMonthlyDiaries(diaries);
+        return ResponseEntity.ok(response);
+    }
 }
+

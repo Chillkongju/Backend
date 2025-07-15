@@ -25,8 +25,6 @@ public class Recommendation {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    private String sourceTitle; // 기반이 된 Diary 작품명
-
     private String title; // 추천된 작품명
 
     private String releaseDate; // 개봉일자 또는 연도 (String)
