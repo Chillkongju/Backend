@@ -50,5 +50,12 @@ public class RecommendationController {
         List<CategoryRecommendationResponse> response = recommendationService.recommendByMonthlyDiaries(diaries);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{diary_id}")
+    public ResponseEntity<List<RecommendationResponse>> getRecommendationsByDiary(@PathVariable("diary_id") Long diaryId) {
+        List<RecommendationResponse> responses = recommendationService.getRecommendationsByDiaryId(diaryId);
+        return ResponseEntity.ok(responses);
+    }
+
 }
 
