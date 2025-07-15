@@ -11,6 +11,27 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - backend
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "8080:8080"
+    env_file: ".env"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
 
 volumes:
   mysql-data:
