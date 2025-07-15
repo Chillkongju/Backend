@@ -2,6 +2,7 @@ package backend.baba.member.service;
 
 import backend.baba.member.domain.Member;
 import backend.baba.member.dto.MemberInfoResponseDto;
+import backend.baba.member.dto.UpdateProfileRequestDto;
 import backend.baba.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,5 +37,18 @@ public class MemberService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         return new MemberInfoResponseDto(member);
+    }
+
+    public void updateProfile(String username, UpdateProfileRequestDto dto) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        member.updateProfile(
+                dto.getName(),
+                dto.getProfileImageUrl(),
+                dto.getBio(),
+                dto.getPreference(),
+                dto.getLink()
+        );
     }
 }
