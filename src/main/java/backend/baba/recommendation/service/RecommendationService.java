@@ -63,6 +63,7 @@ public class RecommendationService {
                             .member(diary.getMember())
                             .category(diary.getCategory())
                             .title(title)
+                            .diary(diary)
                             .releaseDate(releaseDate)
                             .genre(genre)
                             .summary(summary)
@@ -179,6 +180,29 @@ public class RecommendationService {
                 .toList();
     }
 
+    public List<RecommendationResponse> getRecommendationsByDiaryId(Long diaryId) {
+        return recommendationRepository.findAllByDiaryId(diaryId)
+                .stream()
+                .map(RecommendationResponse::from)
+                .toList();
+    }
 
+    public List<CategoryRecommendationResponse> getMonthlyRecommendations(Long memberId) {
+        List<Recommendation> recommendations = recommendationRepository.findAllByMemberIdAndType(memberId, "MONTHLY");
+
+        return recommendations.stream()
+                .collect(Collectors.groupingBy(Recommendation::getCategory))
+                .entrySet()
+                .stream()
+                .map(entry -> CategoryRecommendationResponse.builder()
+                        .category(entry.getKey().getLabel())
+                        .recommendations(
+                                entry.getValue().stream()
+                                        .map(RecommendationResponse::from)
+                                        .toList()
+                        )
+                        .build())
+                .toList();
+    }
 
 }
