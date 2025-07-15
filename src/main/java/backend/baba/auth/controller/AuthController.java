@@ -2,6 +2,7 @@ package backend.baba.auth.controller;
 
 import backend.baba.auth.dto.LoginRequestDto;
 import backend.baba.auth.service.AuthService;
+import backend.baba.member.domain.Member;
 import backend.baba.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto requestDto,
+                                        HttpServletRequest request) {
         try {
-            authService.login(requestDto);
+            Member member = authService.login(requestDto);
+
+            // 세션에 사용자 정보 저장
+            request.getSession().setAttribute("member", member);
+
             return ResponseEntity.ok("로그인 성공");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,8 +53,12 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
-        // 서버 세션 무효화 (로그아웃 처리)
-        request.getSession().invalidate();
+
+        var session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
         return ResponseEntity.ok("로그아웃 완료");
     }
 
