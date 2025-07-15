@@ -205,4 +205,11 @@ public class RecommendationService {
                 .toList();
     }
 
+    public RecommendationResponse getRecommendation(Long memberId, Long recommendationId) {
+        Recommendation recommendation = recommendationRepository.findByIdAndMemberId(recommendationId, memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 추천 정보를 찾을 수 없습니다."));
+
+        return RecommendationResponse.from(recommendation);
+    }
+
 }

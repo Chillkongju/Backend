@@ -67,5 +67,15 @@ public class RecommendationController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/member/{memberId}/{recommendationId}")
+    @Operation(summary = "추천 단일 조회", description = "회원 ID와 추천 ID로 특정 추천 콘텐츠를 조회합니다.")
+    public ResponseEntity<RecommendationResponse> getRecommendation(
+            @PathVariable("memberId") Long memberId,
+            @PathVariable("recommendationId") Long recommendationId
+    ) {
+        RecommendationResponse response = recommendationService.getRecommendation(memberId, recommendationId);
+        return ResponseEntity.ok(response);
+    }
+
 }
 
