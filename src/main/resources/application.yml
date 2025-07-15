@@ -16,6 +16,11 @@ spring:
       hibernate:
         format_sql: true
 
+  openai:
+    api-key: ${OPENAI_API_KEY}
+    url: https://api.openai.com/v1/chat/completions
+    model: gpt-4
+
 
   mvc:
     servlet:
