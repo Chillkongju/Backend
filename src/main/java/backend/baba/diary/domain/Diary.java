@@ -68,5 +68,7 @@ public class Diary {
         this.loveCount = loveCount;
     }
 
-
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 }

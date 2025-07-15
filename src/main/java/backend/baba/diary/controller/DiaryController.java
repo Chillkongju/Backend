@@ -1,6 +1,7 @@
 package backend.baba.diary.controller;
 
-import backend.baba.diary.dto.request.DiaryCreateRequest;
+import
+        backend.baba.diary.dto.request.DiaryCreateRequest;
 import backend.baba.diary.dto.response.DiaryResponse;
 import backend.baba.diary.service.DiaryService;
 import io.swagger.v3.oas.annotations.Operation;
