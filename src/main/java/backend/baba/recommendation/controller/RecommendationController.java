@@ -52,9 +52,19 @@ public class RecommendationController {
     }
 
     @GetMapping("/{diary_id}")
+    @Operation(summary = "일일 문화생활 추천 전체 조회", description = "회원의 일일 추천 콘텐츠 목록을 조회합니다.")
     public ResponseEntity<List<RecommendationResponse>> getRecommendationsByDiary(@PathVariable("diary_id") Long diaryId) {
         List<RecommendationResponse> responses = recommendationService.getRecommendationsByDiaryId(diaryId);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/monthly")
+    @Operation(summary = "월별 문화생활 추천 전체 조회", description = "회원의 월별 추천 콘텐츠 목록을 카테고리별로 조회합니다.")
+    public ResponseEntity<List<CategoryRecommendationResponse>> getMonthlyRecommendations(
+            @RequestParam Long memberId
+    ) {
+        List<CategoryRecommendationResponse> response = recommendationService.getMonthlyRecommendations(memberId);
+        return ResponseEntity.ok(response);
     }
 
 }

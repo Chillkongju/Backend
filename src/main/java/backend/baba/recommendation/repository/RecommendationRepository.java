@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RecommendationRepository extends JpaRepository<Recommendation,Long> {
     List<Recommendation> findAllByDiaryId(Long diaryId);
+    List<Recommendation> findAllByMemberIdAndType(Long memberId, String type);
+
 }
