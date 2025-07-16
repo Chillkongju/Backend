@@ -29,8 +29,11 @@ public class Diary {
     @Column(nullable = false)
     private String content; //감상내용
 
+    @Column(columnDefinition = "LONGTEXT")
+    private String image;
+
     @Column(nullable = false)
-    private int rating; //별점
+    private double rating; //별점
 
     private int loveCount; //좋아요수
 
@@ -46,17 +49,18 @@ public class Diary {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Diary(Member member,String title, String content, Category category, int rating, LocalDate watchedAt){
+    public Diary(Member member,String title, String content, Category category, String image, double rating, LocalDate watchedAt){
         this.member=member;
         this.title=title;
         this.content=content;
+        this.image=image;
         this.rating=rating;
         this.category=category;
         this.watchedAt=watchedAt;
     }
 
-    public static Diary create(Member member, String title, String content, Category category, int rating, LocalDate watchedAt){
-        return new Diary(member, title, content, category,rating, watchedAt);
+    public static Diary create(Member member, String title, String content, Category category,String image , double rating, LocalDate watchedAt){
+        return new Diary(member, title, content, category,image,rating, watchedAt);
     }
 
 

@@ -1,17 +1,21 @@
 package backend.baba.diary.controller;
 
+import backend.baba.diary.domain.Category;
 import
         backend.baba.diary.dto.request.DiaryCreateRequest;
 import backend.baba.diary.dto.response.DiaryResponse;
 import backend.baba.diary.service.DiaryService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,10 +25,19 @@ import java.util.List;
 public class DiaryController {
 
     private  final DiaryService diaryService;
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "문화생활 기록 추가", description = "사용자가 문화생활을 기록합니다.")
-    public ResponseEntity<DiaryResponse> createDiary(@RequestParam Long id, @Valid @RequestBody DiaryCreateRequest request){
-        DiaryResponse response=diaryService.createDiary(id, request);
+    public ResponseEntity<DiaryResponse> createDiary(
+            @RequestParam Long id,
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam Category category,
+            @RequestParam Double rating,
+            @RequestParam LocalDate watchedAt,
+            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+    ) {
+        DiaryCreateRequest request = new DiaryCreateRequest(title, content, category, rating, watchedAt);
+        DiaryResponse response = diaryService.createDiary(id, request, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

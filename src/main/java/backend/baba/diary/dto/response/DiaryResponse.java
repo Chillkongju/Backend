@@ -14,6 +14,8 @@ public class DiaryResponse {
     private final String content;
     private final String category;
     private final String categoryLabel;
+    private final double rating;
+    private final String image;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime createdDate;
@@ -22,7 +24,9 @@ public class DiaryResponse {
         this.id=diary.getId();
         this.category=diary.getCategory().name();
         this.categoryLabel=diary.getCategoryLabel();
+        this.image= diary.getImage();
         this.title=diary.getTitle();
+        this.rating=diary.getRating();
         this.content=diary.getContent();
         this.createdDate = diary.getCreatedDate();
     }
