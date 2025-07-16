@@ -22,8 +22,16 @@ public class DiaryCreateRequest {
     private Category category;
 
     @NotNull(message = "별점을 입력해주세요.")
-    private Integer rating;
+    private double rating;
 
     @NotNull(message = "감상날짜를 입력해주세요.")
     private LocalDate watchedAt;
+
+    public DiaryCreateRequest(String title, String content, Category category, Double rating, LocalDate watchedAt) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+        this.rating = rating;
+        this.watchedAt = watchedAt;
+    }
 }

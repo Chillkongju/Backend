@@ -10,7 +10,10 @@ import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -22,10 +25,20 @@ public class DiaryService {
 
     // 문화생활 기록
     @Transactional
-    public DiaryResponse createDiary(Long id, final DiaryCreateRequest request){
+    public DiaryResponse createDiary(Long id, final DiaryCreateRequest request, MultipartFile imageFile){
         Member member=memberRepository.findById(id).orElse(null);
 
-        Diary diary=Diary.create(member,request.getTitle(),request.getContent(), request.getCategory(), request.getRating(), request.getWatchedAt());
+        String base64Image = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                byte[] imageBytes = imageFile.getBytes();
+                base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            } catch (IOException e) {
+                throw new RuntimeException("이미지 파일을 처리하는 중 오류가 발생했습니다.", e);
+            }
+        }
+
+        Diary diary=Diary.create(member,request.getTitle(),request.getContent(), request.getCategory(), base64Image,request.getRating(),request.getWatchedAt());
         diaryRepository.save(diary);
         return new DiaryResponse(diary);
     }
