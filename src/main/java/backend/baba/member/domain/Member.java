@@ -18,11 +18,13 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String username; // 아이디
 
+
     @Column(nullable = false)
     private String name; // 이름
 
     @Column(nullable = false)
     private String password; // 비밀번호
+
 
     private String profileImageUrl; // 프로필 이미지 URL
 
@@ -32,4 +34,11 @@ public class Member {
 
     private String link;            // 외부 링크 (블로그, SNS 등)
 
+    public void updateProfile(String name, String profileImageUrl, String bio, String preference, String link) {
+        if (name != null) this.name = name;
+        if (profileImageUrl != null) this.profileImageUrl = profileImageUrl;
+        if (bio != null) this.bio = bio;
+        if (preference != null) this.preference = preference;
+        if (link != null) this.link = link;
+    }
 }
