@@ -59,7 +59,7 @@ public class DiaryController {
     @DeleteMapping("/{diary_id}")
     @Operation(summary = "나의 문화생활 기록 삭제", description = "사용자가 작성한 문화생활 기록을 삭제합니다.")
     public ResponseEntity<?> deleteDiary(@RequestParam Long memberId, @PathVariable("diary_id") Long diaryId){
-        diaryService.deleteDiary(memberId,diaryId);
+        diaryService.deleteDiary(diaryId, memberId);
         return ResponseEntity.ok("삭제되었습니다.");
     }
 
