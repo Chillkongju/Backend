@@ -46,8 +46,7 @@ public class DiaryService {
     //문화생활 기록 전체 조회 - 내가 작성한
     @Transactional
     public List<DiaryResponse> getAllMyDiaries(Long id){
-        Member member=memberRepository.findById(id).orElse(null);
-        List<Diary> diaries=diaryRepository.findAll();
+        List<Diary> diaries=diaryRepository.findAllByMemberId(id);
         return diaries.stream().map(DiaryResponse::new).toList();
     }
 
